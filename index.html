@@ -273,6 +273,37 @@
 
         .mobile-brand { display: none; }
 
+        /* Modals */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(5px);
+            z-index: 900;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 24px;
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 16px; right: 16px;
+            background: none; border: none; color: var(--text-secondary); font-size: 1.5rem; cursor: pointer;
+        }
+
         /* Scanner Modal */
         #scannerModal {
             display: none;
@@ -426,47 +457,13 @@
                 </div>
 
                 <div class="grid-forms">
-                    <div class="card">
-                        <span class="section-header">Quick Add</span>
-                        
-                        <div class="input-group">
-                            <label>Select from Library (Optional)</label>
-                            <select id="foodLibrarySelect" onchange="applyLibrarySelection()">
-                                <option value="">-- Choose saved food --</option>
-                            </select>
+                    <div class="card" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 24px; text-align: center;">
+                        <div style="background: rgba(16, 185, 129, 0.1); width: 64px; height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 16px;">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--accent-primary)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
                         </div>
-
-                        <div class="input-group">
-                            <label>Food Name</label>
-                            <div style="display: flex; gap: 8px;">
-                                <input type="text" id="foodName" placeholder="What did you eat?">
-                                <button class="btn btn-primary" style="width: auto; padding: 0 12px;" onclick="startScanner('food')">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 0 1 2-2h2"></path><path d="M17 3h2a2 2 0 0 1 2 2v2"></path><path d="M21 17v2a2 2 0 0 1-2 2h-2"></path><path d="M7 21H5a2 2 0 0 1-2-2v-2"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg>
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-                            <div class="input-group">
-                                <label>Weight (oz/g)</label>
-                                <input type="number" id="foodWeight" placeholder="Portion weight" oninput="calculateFromWeight()">
-                            </div>
-                            <div class="input-group">
-                                <label>Total Calories</label>
-                                <input type="number" id="foodCals" placeholder="0">
-                            </div>
-                        </div>
-
-                        <div class="input-group">
-                            <label>Meal</label>
-                            <select id="foodMeal">
-                                <option value="Breakfast">Breakfast</option>
-                                <option value="Lunch">Lunch</option>
-                                <option value="Dinner">Dinner</option>
-                                <option value="Snack">Snack</option>
-                            </select>
-                        </div>
-                        <button class="btn btn-primary" onclick="addFood()">Add to Log</button>
+                        <h3 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 8px;">Log Your Meal</h3>
+                        <p style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 24px;">Search your library, scan a barcode, or enter nutrition facts manually.</p>
+                        <button class="btn btn-primary" style="width: 100%; max-width: 200px;" onclick="openQuickAddModal()">Quick Add +</button>
                     </div>
 
                     <div class="card">
@@ -654,6 +651,74 @@
         </div>
     </div>
 
+    <!-- Quick Add Modal -->
+    <div id="quickAddModal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeQuickAddModal()">×</button>
+            <h2 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 20px;">Quick Add</h2>
+            
+            <div class="input-group">
+                <label>Select from Library (Optional)</label>
+                <select id="qaLibrarySelect" onchange="applyLibrarySelectionQuickAdd()">
+                    <option value="">-- Choose saved food --</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label>Food Name</label>
+                <div style="display: flex; gap: 8px;">
+                    <input type="text" id="qaFoodName" placeholder="What did you eat?">
+                    <button class="btn btn-primary" style="width: auto; padding: 0 12px;" onclick="startScanner('qa')">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 0 1 2-2h2"></path><path d="M17 3h2a2 2 0 0 1 2 2v2"></path><path d="M21 17v2a2 2 0 0 1-2 2h-2"></path><path d="M7 21H5a2 2 0 0 1-2-2v-2"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg>
+                    </button>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
+                <div class="input-group" style="margin-bottom: 0;">
+                    <label>Amount Consumed</label>
+                    <input type="number" id="qaAmount" placeholder="e.g. 1, 1.5" oninput="calculatePortionRealtime()">
+                </div>
+                <div class="input-group" style="margin-bottom: 0;">
+                    <label>Total Calories</label>
+                    <input type="number" id="qaCals" placeholder="0">
+                </div>
+            </div>
+            
+            <div style="background: var(--bg-deep); padding: 16px; border-radius: 12px; margin-bottom: 20px; border: 1px solid var(--border-subtle);">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <div>
+                        <span style="font-size: 0.75rem; color: var(--text-secondary);">Base Serving</span>
+                        <input type="text" id="qaBaseServing" placeholder="e.g. 1 cup, 100g" style="margin-top: 4px; padding: 8px; font-size: 0.85rem;" oninput="calculatePortionRealtime()">
+                    </div>
+                    <div>
+                        <span style="font-size: 0.75rem; color: var(--text-secondary);">Base Calories</span>
+                        <input type="number" id="qaBaseCals" placeholder="0" style="margin-top: 4px; padding: 8px; font-size: 0.85rem;" oninput="calculatePortionRealtime()">
+                    </div>
+                    <div>
+                        <span style="font-size: 0.75rem; color: var(--text-secondary);">Protein (g)</span>
+                        <input type="number" id="qaBaseProtein" placeholder="0" style="margin-top: 4px; padding: 8px; font-size: 0.85rem;">
+                    </div>
+                    <div>
+                        <span style="font-size: 0.75rem; color: var(--text-secondary);">Fiber (g)</span>
+                        <input type="number" id="qaBaseFiber" placeholder="0" style="margin-top: 4px; padding: 8px; font-size: 0.85rem;">
+                    </div>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>Meal</label>
+                <select id="qaMeal">
+                    <option value="Breakfast">Breakfast</option>
+                    <option value="Lunch">Lunch</option>
+                    <option value="Dinner">Dinner</option>
+                    <option value="Snack">Snack</option>
+                </select>
+            </div>
+            <button class="btn btn-primary" onclick="addFoodQuick()">Add to Log</button>
+        </div>
+    </div>
+
     <script>
         let state = {
             dailyGoal: 2000,
@@ -707,6 +772,52 @@
             localStorage.setItem('foodTrackerState', JSON.stringify(state));
         }
 
+        // --- Quick Add Modal Logic ---
+        function openQuickAddModal() {
+            document.getElementById('quickAddModal').style.display = 'flex';
+            updateLibraryDropdown();
+        }
+
+        function closeQuickAddModal() {
+            document.getElementById('quickAddModal').style.display = 'none';
+        }
+
+        function applyLibrarySelectionQuickAdd() {
+            const id = document.getElementById('qaLibrarySelect').value;
+            if (!id) {
+                document.getElementById('qaFoodName').value = '';
+                document.getElementById('qaBaseCals').value = '';
+                document.getElementById('qaBaseServing').value = '';
+                document.getElementById('qaBaseProtein').value = '';
+                document.getElementById('qaBaseFiber').value = '';
+                document.getElementById('qaAmount').value = '';
+                document.getElementById('qaCals').value = '';
+                return;
+            }
+            const food = state.foodLibrary.find(f => f.id == id);
+            if (food) {
+                document.getElementById('qaFoodName').value = food.name;
+                document.getElementById('qaBaseCals').value = food.calories;
+                document.getElementById('qaBaseServing').value = food.serving || (food.weight ? food.weight + 'g' : '1 serving');
+                document.getElementById('qaBaseProtein').value = food.protein || 0;
+                document.getElementById('qaBaseFiber').value = food.fiber || 0;
+                document.getElementById('qaAmount').value = 1;
+                calculatePortionRealtime();
+            }
+        }
+
+        function calculatePortionRealtime() {
+            const amountStr = document.getElementById('qaAmount').value;
+            const amount = parseFloat(amountStr.replace(',', '.')) || 0;
+            
+            const baseCals = parseInt(document.getElementById('qaBaseCals').value) || 0;
+            if (amount > 0) {
+                document.getElementById('qaCals').value = Math.round(amount * baseCals);
+            } else {
+                document.getElementById('qaCals').value = '';
+            }
+        }
+
         // --- Scanner & Sync Logic ---
         let scannerContext = null;
         let html5QrCode = null;
@@ -748,47 +859,93 @@
 
         async function fetchProductData(barcode) {
             try {
-                const res = await fetch(`https://world.openfoodfacts.org/api/v2/product/${barcode}.json`);
-                const data = await res.json();
+                // 1. Try Open Food Facts
+                let res = await fetch(`https://world.openfoodfacts.org/api/v2/product/${barcode}.json`);
+                let data = await res.json();
                 
                 if (data.status === 1) {
                     const product = data.product;
                     const nut = product.nutriments || {};
                     
+                    const cals = nut['energy-kcal_serving'] || nut['energy-kcal_100g'] || 0;
+                    const servingSize = product.serving_quantity ? product.serving_quantity + (product.serving_quantity_unit || 'g') : '100g';
+                    const weightBase = product.serving_quantity || 100;
+                    
+                    const protein = nut['proteins_serving'] || nut['proteins_100g'] || 0;
+                    const fiber = nut['fiber_serving'] || nut['fiber_100g'] || 0;
+                    const fat = nut['fat_serving'] || nut['fat_100g'] || 0;
+                    const satFat = nut['saturated-fat_serving'] || nut['saturated-fat_100g'] || 0;
+                    const carbs = nut['carbohydrates_serving'] || nut['carbohydrates_100g'] || 0;
+                    const sugar = nut['sugars_serving'] || nut['sugars_100g'] || 0;
+                    const sodium = (nut['sodium_serving'] || nut['sodium_100g'] || 0) * 1000;
+                    
                     const nutrition = {
                         name: product.product_name || "Unknown Product",
-                        calories: Math.round(nut['energy-kcal_100g'] || 0),
-                        weight: 100,
-                        protein: nut['proteins_100g'] || 0,
-                        fiber: nut['fiber_100g'] || 0,
-                        fat: nut['fat_100g'] || 0,
-                        satFat: nut['saturated-fat_100g'] || 0,
-                        carbs: nut['carbohydrates_100g'] || 0,
-                        sugar: nut['sugars_100g'] || 0,
-                        sodium: nut['sodium_100g'] * 1000 || 0
+                        calories: Math.round(cals),
+                        serving: servingSize,
+                        weight: weightBase,
+                        protein: Math.round(protein * 10) / 10,
+                        fiber: Math.round(fiber * 10) / 10,
+                        fat: Math.round(fat * 10) / 10,
+                        satFat: Math.round(satFat * 10) / 10,
+                        carbs: Math.round(carbs * 10) / 10,
+                        sugar: Math.round(sugar * 10) / 10,
+                        sodium: Math.round(sodium)
                     };
                     
-                    if (scannerContext === 'food') {
-                        document.getElementById('foodName').value = nutrition.name;
-                        document.getElementById('foodCals').value = nutrition.calories;
-                        document.getElementById('foodWeight').value = 100;
-                    } else {
-                        document.getElementById('libFoodName').value = nutrition.name;
-                        document.getElementById('lib_calories').value = nutrition.calories;
-                        document.getElementById('libFoodWeight').value = 100;
-                        document.getElementById('lib_protein').value = nutrition.protein;
-                        document.getElementById('lib_fiber').value = nutrition.fiber;
-                        document.getElementById('lib_fat').value = nutrition.fat;
-                        document.getElementById('lib_satFat').value = nutrition.satFat;
-                        document.getElementById('lib_carbs').value = nutrition.carbs;
-                        document.getElementById('lib_sugars').value = nutrition.sugar;
-                        document.getElementById('lib_sodium').value = Math.round(nutrition.sodium);
-                    }
-                } else {
-                    alert("Product not found.");
+                    fillScannerData(nutrition);
+                    return;
                 }
+                
+                // 2. Try UPCItemDB Fallback
+                res = await fetch(`https://api.upcitemdb.com/prod/trial/lookup?upc=${barcode}`);
+                data = await res.json();
+                
+                if (data.code === 'OK' && data.items && data.items.length > 0) {
+                    const item = data.items[0];
+                    const nutrition = {
+                        name: item.title || "Unknown Product",
+                        calories: 0,
+                        serving: '1 serving',
+                        weight: 100,
+                        protein: 0, fiber: 0, fat: 0, satFat: 0, carbs: 0, sugar: 0, sodium: 0
+                    };
+                    fillScannerData(nutrition);
+                    alert("Product found via UPCItemDB. Detailed nutrition may be missing, please input manually.");
+                    return;
+                }
+
+                // 3. Fallback: Search Web Option
+                if (confirm("Product not found in our databases. Would you like to search the web for this barcode?")) {
+                    window.open(`https://www.google.com/search?q=${barcode}+nutrition+facts`, '_blank');
+                }
+
             } catch (err) {
                 alert("Error fetching product data.");
+            }
+        }
+
+        function fillScannerData(nutrition) {
+            if (scannerContext === 'qa' || scannerContext === 'food') {
+                document.getElementById('qaFoodName').value = nutrition.name;
+                document.getElementById('qaBaseCals').value = nutrition.calories;
+                document.getElementById('qaBaseServing').value = nutrition.serving;
+                document.getElementById('qaBaseProtein').value = nutrition.protein;
+                document.getElementById('qaBaseFiber').value = nutrition.fiber;
+                document.getElementById('qaAmount').value = 1;
+                calculatePortionRealtime();
+            } else {
+                document.getElementById('libFoodName').value = nutrition.name;
+                document.getElementById('lib_calories').value = nutrition.calories;
+                document.getElementById('libFoodWeight').value = nutrition.weight;
+                document.getElementById('lib_serving').value = nutrition.serving;
+                document.getElementById('lib_protein').value = nutrition.protein;
+                document.getElementById('lib_fiber').value = nutrition.fiber;
+                document.getElementById('lib_fat').value = nutrition.fat;
+                document.getElementById('lib_satFat').value = nutrition.satFat;
+                document.getElementById('lib_carbs').value = nutrition.carbs;
+                document.getElementById('lib_sugars').value = nutrition.sugar;
+                document.getElementById('lib_sodium').value = Math.round(nutrition.sodium);
             }
         }
 
@@ -858,16 +1015,17 @@
         function addToLibrary() {
             const name = document.getElementById('libFoodName').value;
             const calories = parseInt(document.getElementById('lib_calories').value);
-            const weight = parseInt(document.getElementById('libFoodWeight').value);
+            const weight = parseInt(document.getElementById('libFoodWeight').value) || 100;
+            const serving = document.getElementById('lib_serving').value || '1 serving';
 
-            if (!name || isNaN(calories) || isNaN(weight)) return alert('Please enter name, calories, and base weight.');
+            if (!name || isNaN(calories)) return alert('Please enter name and calories.');
 
             const food = {
                 id: Date.now(),
                 name: name,
                 calories: calories,
                 weight: weight,
-                serving: document.getElementById('lib_serving').value,
+                serving: serving,
                 protein: parseFloat(document.getElementById('lib_protein').value) || 0,
                 fiber: parseFloat(document.getElementById('lib_fiber').value) || 0,
                 fat: parseFloat(document.getElementById('lib_fat').value) || 0,
@@ -913,7 +1071,7 @@
                 div.innerHTML = `
                     <div class="log-info">
                         <span class="food-name">${food.name}</span>
-                        <span class="meal-cat">${food.calories} kcal / ${food.weight} unit | P: ${food.protein}g F: ${food.fiber}g</span>
+                        <span class="meal-cat">${food.calories} kcal / ${food.serving} | P: ${food.protein}g F: ${food.fiber}g</span>
                     </div>
                     <div style="display: flex; align-items: center; gap: 12px;">
                         <button class="btn btn-primary" style="padding: 4px 8px; font-size: 0.7rem; width: auto;" onclick="quickAddFromLibrary(${food.id})">Use</button>
@@ -928,80 +1086,56 @@
             const food = state.foodLibrary.find(f => f.id === id);
             if (food) {
                 switchView('dashboard', document.querySelector('.nav-item'));
-                document.getElementById('foodLibrarySelect').value = id;
-                applyLibrarySelection();
-            }
-        }
-
-        function applyLibrarySelection() {
-            const id = document.getElementById('foodLibrarySelect').value;
-            if (!id) {
-                document.getElementById('foodName').value = '';
-                document.getElementById('foodCals').value = '';
-                document.getElementById('foodWeight').value = '';
-                return;
-            }
-            const food = state.foodLibrary.find(f => f.id == id);
-            if (food) {
-                document.getElementById('foodName').value = food.name;
-                document.getElementById('foodCals').value = food.calories;
-                document.getElementById('foodWeight').value = food.weight;
-            }
-        }
-
-        function calculateFromWeight() {
-            const id = document.getElementById('foodLibrarySelect').value;
-            const weightInput = parseFloat(document.getElementById('foodWeight').value);
-            if (!id || isNaN(weightInput)) return;
-            const food = state.foodLibrary.find(f => f.id == id);
-            if (food) {
-                const calculatedCals = Math.round((weightInput / food.weight) * food.calories);
-                document.getElementById('foodCals').value = calculatedCals;
+                openQuickAddModal();
+                document.getElementById('qaLibrarySelect').value = id;
+                applyLibrarySelectionQuickAdd();
             }
         }
 
         function updateLibraryDropdown() {
-            const select = document.getElementById('foodLibrarySelect');
+            const select = document.getElementById('qaLibrarySelect');
+            if(!select) return;
             const currentValue = select.value;
             select.innerHTML = '<option value="">-- Choose saved food --</option>';
             state.foodLibrary.sort((a, b) => a.name.localeCompare(b.name)).forEach(food => {
                 const opt = document.createElement('option');
                 opt.value = food.id;
-                opt.textContent = food.name;
+                opt.textContent = food.name + ` (${food.serving})`;
                 select.appendChild(opt);
             });
             select.value = currentValue;
         }
 
-        function addFood() {
-            const name = document.getElementById('foodName').value;
-            const calories = parseInt(document.getElementById('foodCals').value);
-            const weight = parseFloat(document.getElementById('foodWeight').value) || 0;
-            const meal = document.getElementById('foodMeal').value;
+        function addFoodQuick() {
+            const name = document.getElementById('qaFoodName').value;
+            const totalCals = parseInt(document.getElementById('qaCals').value);
+            const amountStr = document.getElementById('qaAmount').value;
+            const amount = parseFloat(amountStr.replace(',', '.')) || 1;
+            const meal = document.getElementById('qaMeal').value;
 
-            if (!name || isNaN(calories)) return alert('Please enter food name and calories.');
+            if (!name || isNaN(totalCals)) return alert('Please enter food name and ensure calories are calculated.');
 
-            let protein = 0;
-            let fiber = 0;
-            const libId = document.getElementById('foodLibrarySelect').value;
-            if (libId) {
-                const libFood = state.foodLibrary.find(f => f.id == libId);
-                if (libFood && weight > 0) {
-                    const ratio = weight / libFood.weight;
-                    protein = Math.round(libFood.protein * ratio * 10) / 10;
-                    fiber = Math.round(libFood.fiber * ratio * 10) / 10;
-                }
-            }
+            const baseProtein = parseFloat(document.getElementById('qaBaseProtein').value) || 0;
+            const baseFiber = parseFloat(document.getElementById('qaBaseFiber').value) || 0;
+            
+            const protein = Math.round(baseProtein * amount * 10) / 10;
+            const fiber = Math.round(baseFiber * amount * 10) / 10;
 
             state.logs.push({ 
                 id: Date.now(), 
-                name, calories, meal, weight, protein, fiber
+                name, calories: totalCals, meal, amount, protein, fiber
             });
             
-            document.getElementById('foodName').value = '';
-            document.getElementById('foodCals').value = '';
-            document.getElementById('foodWeight').value = '';
-            document.getElementById('foodLibrarySelect').value = '';
+            document.getElementById('qaFoodName').value = '';
+            document.getElementById('qaCals').value = '';
+            document.getElementById('qaAmount').value = '';
+            document.getElementById('qaBaseCals').value = '';
+            document.getElementById('qaBaseServing').value = '';
+            document.getElementById('qaBaseProtein').value = '';
+            document.getElementById('qaBaseFiber').value = '';
+            document.getElementById('qaLibrarySelect').value = '';
+            
+            closeQuickAddModal();
             saveState();
             updateUI();
         }
