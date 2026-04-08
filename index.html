@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FoodTracker — Digital Colosseum</title>
+    <title>Cato — Digital Colosseum</title>
     
     <!-- PWA / iOS Tags -->
     <link rel="manifest" href="manifest.json">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="FoodTracker">
+    <meta name="apple-mobile-web-app-title" content="Cato">
     <meta name="theme-color" content="#0f0f0f">
     <link rel="apple-touch-icon" href="icon-192.png">
 
@@ -464,8 +464,8 @@
         <!-- Sidebar -->
         <aside>
             <div class="brand">
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="M12 8v4"></path><path d="M12 16h.01"></path></svg>
-                FoodTracker
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--accent-primary)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                Cato
             </div>
             <nav>
                 <div class="nav-item active" onclick="switchView('dashboard', this)">
@@ -502,7 +502,7 @@
             <section id="dashboard" class="view-section active">
                 <div class="mobile-brand">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-                    FoodTracker
+                    Cato
                 </div>
                 <div class="header-row">
                     <h1 class="page-title">Summary</h1>
@@ -869,7 +869,7 @@
         async function fetchProductData(barcode) {
             const clean = barcode.trim();
             try {
-                let res = await fetch(`https://world.openfoodfacts.org/api/v2/product/${clean}.json`, { headers: { 'User-Agent': 'FoodTrackerApp-Roman-1.0' } });
+                let res = await fetch(`https://world.openfoodfacts.org/api/v2/product/${clean}.json`, { headers: { 'User-Agent': 'Cato-Roman-1.0' } });
                 let data = await res.json();
                 if (data.status === 1) {
                     const p = data.product; const n = p.nutriments || {};
