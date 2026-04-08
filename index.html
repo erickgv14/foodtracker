@@ -848,6 +848,11 @@
             }
         }
 
+        function convertToGrams(value, unit) {
+            if (unit === 'oz') return value * 28.3495;
+            return value;
+        }
+
         function calculatePortionRealtime() {
             const qty = parseFloat(document.getElementById('qaAmount').value) || 0;
             const enteredWeight = parseFloat(document.getElementById('qaWeight').value) || 0;
@@ -872,11 +877,6 @@
             } else {
                 document.getElementById('qaCals').value = '';
             }
-        }
-
-        function convertToGrams(value, unit) {
-            if (unit === 'oz') return value * 28.3495;
-            return value;
         }
 
         // --- Scanner & Sync Logic ---
@@ -919,14 +919,18 @@
         }
 
         async function fetchProductData(barcode) {
+            const cleanBarcode = barcode.trim();
             try {
-                let res = await fetch(`https://world.openfoodfacts.org/api/v2/product/${barcode}.json`);
+                // 1. Try Open Food Facts
+                let res = await fetch(`https://world.openfoodfacts.org/api/v2/product/${cleanBarcode}.json`, {
+                    headers: { 'User-Agent': 'FoodTrackerApp - iOS/PWA - 1.0' }
+                });
                 let data = await res.json();
-                
+
                 if (data.status === 1) {
                     const product = data.product;
                     const nut = product.nutriments || {};
-                    
+
                     const nutrition = {
                         name: product.product_name || "Unknown Product",
                         calories: Math.round(nut['energy-kcal_serving'] || nut['energy-kcal_100g'] || 0),
@@ -941,35 +945,40 @@
                         sugar: Math.round((nut['sugars_serving'] || nut['sugars_100g'] || 0) * 10) / 10,
                         sodium: Math.round((nut['sodium_serving'] || nut['sodium_100g'] || 0) * 1000)
                     };
-                    
+
                     fillScannerData(nutrition);
                     return;
                 }
-                
-                res = await fetch(`https://api.upcitemdb.com/prod/trial/lookup?upc=${barcode}`);
-                data = await res.json();
-                
-                if (data.code === 'OK' && data.items && data.items.length > 0) {
-                    const item = data.items[0];
-                    const nutrition = {
-                        name: item.title || "Unknown Product",
-                        calories: 0,
-                        serving: '1 serving',
-                        weight: 100,
-                        unit: 'g',
-                        protein: 0, fiber: 0, fat: 0, satFat: 0, carbs: 0, sugar: 0, sodium: 0
-                    };
-                    fillScannerData(nutrition);
-                    alert("Product found via UPCItemDB. Detailed nutrition may be missing, please input manually.");
-                    return;
+
+                // 2. Try UPCItemDB Fallback
+                try {
+                    res = await fetch(`https://api.upcitemdb.com/prod/trial/lookup?upc=${cleanBarcode}`);
+                    data = await res.json();
+
+                    if (data.code === 'OK' && data.items && data.items.length > 0) {
+                        const item = data.items[0];
+                        const nutrition = {
+                            name: item.title || "Unknown Product",
+                            calories: 0,
+                            serving: '1 serving',
+                            weight: 100,
+                            unit: 'g',
+                            protein: 0, fiber: 0, fat: 0, satFat: 0, carbs: 0, sugar: 0, sodium: 0
+                        };
+                        fillScannerData(nutrition);
+                        alert("Product found via Backup Database. Nutrition info might be missing—please verify manually.");
+                        return;
+                    }
+                } catch (e) {
+                    console.log("Backup DB error or blocked.");
                 }
 
                 if (confirm("Product not found in our databases. Would you like to search the web for this barcode?")) {
-                    window.open(`https://www.google.com/search?q=${barcode}+nutrition+facts`, '_blank');
+                    window.open(`https://www.google.com/search?q=${cleanBarcode}+nutrition+facts`, '_blank');
                 }
 
             } catch (err) {
-                alert("Error fetching product data.");
+                alert("Scan Error: " + err.message + "\nTry again or check your connection.");
             }
         }
 
