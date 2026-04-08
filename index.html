@@ -17,6 +17,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/html5-qrcode"></script>
     <style>
         :root {
             --bg-deep: #09090b;
@@ -287,31 +288,9 @@
             justify-content: center;
         }
 
-        #scannerVideo {
+        #scannerReader {
             width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .scanner-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            border: 40px solid rgba(0,0,0,0.5);
-            pointer-events: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .scan-box {
-            width: 250px;
-            height: 150px;
-            border: 2px solid var(--accent-primary);
-            border-radius: 12px;
-            box-shadow: 0 0 0 1000px rgba(0,0,0,0.5);
+            max-width: 500px;
         }
 
         .scanner-controls {
@@ -437,7 +416,7 @@
         <main>
             <!-- Dashboard Section -->
             <section id="dashboard" class="view-section active">
-                <div class="mobile-brand" style="display: none;">
+                <div class="mobile-brand">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="1" x2="6" y2="4"></line><line x1="10" y1="1" x2="10" y2="4"></line><line x1="14" y1="1" x2="14" y2="4"></line></svg>
                     FoodTracker
                 </div>
@@ -669,10 +648,7 @@
 
     <!-- Scanner Modal -->
     <div id="scannerModal">
-        <video id="scannerVideo" playsinline></video>
-        <div class="scanner-overlay">
-            <div class="scan-box"></div>
-        </div>
+        <div id="scannerReader" style="width: 100%; max-width: 500px;"></div>
         <div class="scanner-controls">
             <button class="btn btn-danger" style="width: auto; padding: 12px 32px;" onclick="stopScanner()">Cancel</button>
         </div>
@@ -733,60 +709,41 @@
 
         // --- Scanner & Sync Logic ---
         let scannerContext = null;
-        let isScanning = false;
+        let html5QrCode = null;
 
         async function startScanner(context) {
             scannerContext = context;
             const modal = document.getElementById('scannerModal');
-            const video = document.getElementById('scannerVideo');
+            modal.style.display = 'flex';
             
+            html5QrCode = new Html5Qrcode("scannerReader");
+            const config = { fps: 10, qrbox: { width: 250, height: 150 } };
+
             try {
-                const stream = await navigator.mediaDevices.getUserMedia({ 
-                    video: { facingMode: "environment" } 
-                });
-                video.srcObject = stream;
-                await video.play();
-                
-                modal.style.display = 'flex';
-                isScanning = true;
-                
-                if ('BarcodeDetector' in window) {
-                    const detector = new BarcodeDetector({ formats: ['ean_13', 'ean_8', 'upc_a', 'upc_e'] });
-                    tick(detector, video);
-                } else {
-                    alert("Barcode Detection API not supported on this browser. Try updating iOS or using Chrome.");
-                    stopScanner();
-                }
+                await html5QrCode.start(
+                    { facingMode: "environment" }, 
+                    config, 
+                    (decodedText) => {
+                        stopScanner();
+                        fetchProductData(decodedText);
+                    }
+                );
             } catch (err) {
-                alert("Camera access denied or not available.");
-                console.error(err);
+                alert("Camera error: " + err);
+                stopScanner();
             }
         }
 
-        function stopScanner() {
-            const video = document.getElementById('scannerVideo');
+        async function stopScanner() {
             const modal = document.getElementById('scannerModal');
-            if (video.srcObject) {
-                video.srcObject.getTracks().forEach(track => track.stop());
+            if (html5QrCode) {
+                try {
+                    await html5QrCode.stop();
+                    await html5QrCode.clear();
+                } catch (e) { console.log(e); }
+                html5QrCode = null;
             }
             modal.style.display = 'none';
-            isScanning = false;
-        }
-
-        async function tick(detector, video) {
-            if (!isScanning) return;
-            try {
-                const barcodes = await detector.detect(video);
-                if (barcodes.length > 0) {
-                    const code = barcodes[0].rawValue;
-                    stopScanner();
-                    fetchProductData(code);
-                } else {
-                    requestAnimationFrame(() => tick(detector, video));
-                }
-            } catch (err) {
-                requestAnimationFrame(() => tick(detector, video));
-            }
         }
 
         async function fetchProductData(barcode) {
