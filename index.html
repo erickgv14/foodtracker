@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FoodTracker — Daily Calorie Log</title>
+    <title>FoodTracker — Digital Colosseum</title>
     
     <!-- PWA / iOS Tags -->
     <link rel="manifest" href="manifest.json">
@@ -11,33 +11,34 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="FoodTracker">
-    <meta name="theme-color" content="#09090b">
+    <meta name="theme-color" content="#0f0f0f">
     <link rel="apple-touch-icon" href="icon-192.png">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/html5-qrcode"></script>
     <style>
         :root {
-            --bg-deep: #09090b;
-            --bg-surface: #18181b;
-            --bg-card: #27272a;
-            --text-primary: #fafafa;
+            --bg-deep: #0f0f0f;
+            --bg-surface: #1a1a1a;
+            --bg-card: #242424;
+            --text-primary: #f2f2f2;
             --text-secondary: #a1a1aa;
-            --accent-primary: #10b981;
-            --accent-warning: #f59e0b;
-            --accent-danger: #ef4444;
-            --border-subtle: #3f3f46;
+            --accent-primary: #c5a059;
+            --accent-warning: #cd7f32;
+            --accent-danger: #991b1b;
+            --border-subtle: rgba(197, 160, 89, 0.2);
             --sidebar-width: 260px;
             --right-panel-width: 320px;
+            --gold-bright: #e5c185;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Inter', sans-serif;
+            font-family: 'Libre Baskerville', serif;
             -webkit-tap-highlight-color: transparent;
         }
 
@@ -59,65 +60,79 @@
         /* Sidebar Navigation */
         aside {
             background-color: var(--bg-surface);
-            border-right: 1px solid var(--border-subtle);
+            background-image: 
+                repeating-linear-gradient(90deg, transparent, transparent 20px, rgba(0,0,0,0.2) 21px, transparent 22px),
+                linear-gradient(to bottom, rgba(197, 160, 89, 0.05), transparent);
+            border-right: 2px solid var(--accent-primary);
             padding: 24px;
             display: flex;
             flex-direction: column;
             gap: 32px;
+            box-shadow: 5px 0 15px rgba(0,0,0,0.5);
         }
 
         .brand {
-            font-size: 1.5rem;
-            font-weight: 700;
-            letter-spacing: -0.05em;
+            font-family: 'Cinzel', serif;
+            font-size: 1.6rem;
+            font-weight: 900;
+            letter-spacing: 0.05em;
             display: flex;
             align-items: center;
             gap: 12px;
             color: var(--accent-primary);
+            text-transform: uppercase;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
         }
 
         nav {
             display: flex;
             flex-direction: column;
-            gap: 8px;
-        }
-
-        .nav-item {
-            padding: 12px 16px;
-            border-radius: 8px;
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
             gap: 12px;
         }
 
+        .nav-item {
+            padding: 14px 16px;
+            border-radius: 4px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-family: 'Cinzel', serif;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border: 1px solid transparent;
+            text-transform: uppercase;
+        }
+
         .nav-item:hover {
-            background: var(--bg-card);
-            color: var(--text-primary);
+            background: rgba(197, 160, 89, 0.1);
+            color: var(--gold-bright);
+            border-color: var(--border-subtle);
         }
 
         .nav-item.active {
             background: var(--accent-primary);
-            color: white;
+            color: #000;
+            box-shadow: 0 4px 10px rgba(197, 160, 89, 0.4);
         }
 
         .goal-card-mini {
             margin-top: auto;
-            background: linear-gradient(135deg, #064e3b, #10b981);
+            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
             padding: 20px;
-            border-radius: 16px;
-            box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.3);
+            border-radius: 4px;
+            border: 1px solid var(--accent-primary);
+            box-shadow: 0 10px 15px rgba(0,0,0,0.3);
         }
 
         /* Main Content */
         main {
             padding: 40px;
             overflow-y: auto;
-            background: radial-gradient(circle at 50% 0%, #064e3b, transparent 50%);
+            background: radial-gradient(circle at 50% 0%, rgba(197, 160, 89, 0.05), transparent 70%);
         }
 
         .view-section {
@@ -128,11 +143,11 @@
 
         .view-section.active {
             display: block;
-            animation: fadeIn 0.3s ease-out;
+            animation: fadeIn 0.4s ease-out;
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+            from { opacity: 0; transform: translateY(15px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
@@ -144,18 +159,44 @@
         }
 
         .page-title {
-            font-size: 2rem;
+            font-family: 'Cinzel', serif;
+            font-size: 2.2rem;
             font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+            color: var(--gold-bright);
         }
 
-        /* Cards and Sections */
+        /* Roman Style Cards */
         .card {
             background: var(--bg-surface);
-            border: 1px solid var(--border-subtle);
-            border-radius: 16px;
+            border: 1px solid var(--accent-primary);
+            border-radius: 4px;
             padding: 24px;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
             margin-bottom: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--gold-bright), transparent);
+        }
+
+        .section-header {
+            font-family: 'Cinzel', serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--accent-primary);
+            margin-bottom: 16px;
+            display: block;
+            border-bottom: 1px solid var(--border-subtle);
+            padding-bottom: 8px;
         }
 
         .grid-forms {
@@ -167,18 +208,9 @@
         /* Right Panel */
         .right-panel {
             background-color: var(--bg-surface);
-            border-left: 1px solid var(--border-subtle);
+            border-left: 2px solid var(--accent-primary);
             padding: 24px;
             overflow-y: auto;
-        }
-
-        .section-header {
-            font-size: 0.875rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--text-secondary);
-            margin-bottom: 16px;
-            display: block;
         }
 
         /* Form Elements */
@@ -188,46 +220,52 @@
 
         label {
             display: block;
-            font-size: 0.875rem;
-            font-weight: 500;
+            font-size: 0.75rem;
+            font-weight: 700;
             margin-bottom: 8px;
             color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
         input, select, textarea {
             width: 100%;
             padding: 12px 16px;
-            background: var(--bg-deep);
+            background: #000;
             border: 1px solid var(--border-subtle);
-            border-radius: 10px;
+            border-radius: 2px;
             color: var(--text-primary);
             font-size: 1rem;
             outline: none;
-            transition: border-color 0.2s;
+            transition: all 0.2s;
         }
 
         input:focus {
             border-color: var(--accent-primary);
+            box-shadow: 0 0 8px rgba(197, 160, 89, 0.2);
         }
 
         .btn {
             width: 100%;
-            padding: 12px;
-            border-radius: 10px;
-            font-weight: 600;
+            padding: 14px;
+            border-radius: 2px;
+            font-family: 'Cinzel', serif;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
             cursor: pointer;
-            border: none;
-            transition: filter 0.2s;
+            border: 1px solid transparent;
+            transition: all 0.3s;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
         }
 
-        .btn-primary { background: var(--accent-primary); color: white; }
-        .btn-warning { background: var(--accent-warning); color: white; }
-        .btn-danger { background: var(--accent-danger); color: white; }
-        .btn:hover { filter: brightness(1.1); }
+        .btn-primary { background: var(--accent-primary); color: #000; }
+        .btn-warning { background: var(--accent-warning); color: #000; }
+        .btn-danger { background: #000; color: var(--accent-danger); border-color: var(--accent-danger); }
+        .btn:hover { filter: brightness(1.2); transform: translateY(-1px); }
 
         /* Log List */
         .log-list {
@@ -241,24 +279,19 @@
             justify-content: space-between;
             align-items: center;
             padding: 16px;
-            background: var(--bg-deep);
-            border-radius: 12px;
-            border: 1px solid transparent;
+            background: #000;
+            border-radius: 2px;
+            border: 1px solid var(--border-subtle);
             transition: border-color 0.2s;
         }
 
         .log-item:hover {
-            border-color: var(--border-subtle);
+            border-color: var(--accent-primary);
         }
 
-        .log-info {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .food-name { font-weight: 600; }
-        .meal-cat { font-size: 0.75rem; color: var(--text-secondary); }
-        .calories { font-weight: 700; color: var(--accent-primary); }
+        .food-name { font-weight: 700; color: var(--gold-bright); }
+        .meal-cat { font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; }
+        .calories { font-family: 'Cinzel', serif; font-weight: 700; color: var(--accent-primary); }
 
         .delete-btn {
             background: none;
@@ -269,7 +302,7 @@
             border-radius: 4px;
         }
 
-        .delete-btn:hover { color: var(--accent-danger); background: rgba(239, 68, 68, 0.1); }
+        .delete-btn:hover { color: var(--accent-danger); background: rgba(153, 27, 27, 0.1); }
 
         .mobile-brand { display: none; }
 
@@ -278,8 +311,8 @@
             display: none;
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.8);
-            backdrop-filter: blur(5px);
+            background: rgba(0,0,0,0.9);
+            backdrop-filter: blur(10px);
             z-index: 900;
             align-items: center;
             justify-content: center;
@@ -288,20 +321,38 @@
 
         .modal-content {
             background: var(--bg-surface);
-            border: 1px solid var(--border-subtle);
-            border-radius: 16px;
+            border: 2px solid var(--accent-primary);
+            border-radius: 4px;
             width: 100%;
-            max-width: 500px;
+            max-width: 550px;
             max-height: 90vh;
             overflow-y: auto;
-            padding: 24px;
+            padding: 32px;
             position: relative;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
         }
 
         .close-modal {
             position: absolute;
             top: 16px; right: 16px;
-            background: none; border: none; color: var(--text-secondary); font-size: 1.5rem; cursor: pointer;
+            background: none; border: none; color: var(--text-secondary); font-size: 2rem; cursor: pointer;
+        }
+
+        /* Progress Bars (Engraved Look) */
+        .progress-container {
+            width: 100%;
+            height: 12px;
+            background: #000;
+            border-radius: 2px;
+            overflow: hidden;
+            border: 1px solid var(--border-subtle);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.8);
+        }
+
+        .progress-fill {
+            height: 100%;
+            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 0 10px rgba(197, 160, 89, 0.5);
         }
 
         /* Scanner Modal */
@@ -342,22 +393,22 @@
             
             aside {
                 position: fixed;
-                bottom: 16px;
-                left: 16px;
-                right: 16px;
-                width: auto;
-                height: 65px;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                width: 100%;
+                height: 75px;
                 flex-direction: row;
-                justify-content: flex-start;
-                padding: 0 15px;
+                justify-content: center;
+                padding: 0 10px;
                 z-index: 100;
-                background: rgba(24, 24, 27, 0.95);
-                backdrop-filter: blur(10px);
-                border: 1px solid var(--border-subtle);
-                border-radius: 100px;
-                box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+                background: rgba(26, 26, 26, 0.98);
+                backdrop-filter: blur(15px);
+                border-right: none;
+                border-top: 2px solid var(--accent-primary);
+                border-radius: 20px 20px 0 0;
+                box-shadow: 0 -5px 20px rgba(0,0,0,0.5);
                 overflow-x: auto;
-                -webkit-overflow-scrolling: touch;
             }
             aside::-webkit-scrollbar { display: none; }
             
@@ -368,9 +419,11 @@
                 align-items: center;
                 gap: 10px;
                 color: var(--accent-primary);
-                font-weight: 700;
+                font-family: 'Cinzel', serif;
+                font-weight: 900;
                 font-size: 1.25rem;
                 margin-bottom: 24px;
+                text-transform: uppercase;
             }
 
             nav { 
@@ -383,17 +436,17 @@
             }
             .nav-item {
                 flex-shrink: 0;
-                padding: 10px 18px;
-                font-size: 0.85rem;
+                padding: 8px 14px;
+                font-size: 0.7rem;
                 height: fit-content;
-                border-radius: 100px;
+                border-radius: 4px;
             }
             main { padding: 20px; padding-bottom: 120px; }
             
             .right-panel { 
                 display: none; 
                 border-left: none;
-                border-top: 1px solid var(--border-subtle);
+                border-top: 2px solid var(--accent-primary);
                 padding: 40px 20px;
                 background: var(--bg-deep);
             }
@@ -411,35 +464,35 @@
         <!-- Sidebar -->
         <aside>
             <div class="brand">
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="1" x2="6" y2="4"></line><line x1="10" y1="1" x2="10" y2="4"></line><line x1="14" y1="1" x2="14" y2="4"></line></svg>
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="M12 8v4"></path><path d="M12 16h.01"></path></svg>
                 FoodTracker
             </div>
             <nav>
                 <div class="nav-item active" onclick="switchView('dashboard', this)">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
                     Dashboard
                 </div>
                 <div class="nav-item" onclick="switchView('log', this)">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
                     Daily Log
                 </div>
                 <div class="nav-item" onclick="switchView('library', this)">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
                     Library
                 </div>
                 <div class="nav-item" onclick="switchView('history', this)">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                     History
                 </div>
                 <div class="nav-item" onclick="archiveDay()">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
                     Finish Day
                 </div>
             </nav>
 
             <div class="goal-card-mini">
-                <span style="font-size: 0.8rem; opacity: 0.8; font-weight: 500;">REMAINING CALORIES</span>
-                <div id="sideBalance" style="font-size: 1.5rem; font-weight: 700; margin-top: 4px;">2000</div>
+                <span style="font-size: 0.7rem; color: var(--text-secondary); text-transform: uppercase;">REMAINING</span>
+                <div id="sideBalance" style="font-family: 'Cinzel', serif; font-size: 1.8rem; font-weight: 700; color: var(--accent-primary); margin-top: 4px;">2000</div>
             </div>
         </aside>
 
@@ -448,69 +501,69 @@
             <!-- Dashboard Section -->
             <section id="dashboard" class="view-section active">
                 <div class="mobile-brand">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="1" x2="6" y2="4"></line><line x1="10" y1="1" x2="10" y2="4"></line><line x1="14" y1="1" x2="14" y2="4"></line></svg>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
                     FoodTracker
                 </div>
                 <div class="header-row">
-                    <h1 class="page-title">Today's Summary</h1>
-                    <div id="topBalance" style="font-size: 2rem; font-weight: 800; color: var(--accent-primary)">2000</div>
+                    <h1 class="page-title">Summary</h1>
+                    <div id="topBalance" style="font-family: 'Cinzel', serif; font-size: 2.2rem; font-weight: 900; color: var(--accent-primary)">2000</div>
                 </div>
 
                 <div class="grid-forms">
                     <div class="card" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 24px; text-align: center;">
-                        <div style="background: rgba(16, 185, 129, 0.1); width: 64px; height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 16px;">
+                        <div style="border: 2px solid var(--accent-primary); width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 16px; box-shadow: 0 0 15px rgba(197, 160, 89, 0.3);">
                             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--accent-primary)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
                         </div>
-                        <h3 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 8px;">Log Your Meal</h3>
-                        <p style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 24px;">Search your library, scan a barcode, or enter nutrition facts manually.</p>
-                        <button class="btn btn-primary" style="width: 100%; max-width: 200px;" onclick="openQuickAddModal()">Quick Add +</button>
+                        <h3 style="font-family: 'Cinzel', serif; font-size: 1.25rem; font-weight: 700; margin-bottom: 8px; text-transform: uppercase;">Log Intake</h3>
+                        <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 24px; line-height: 1.5;">Prepare for the campaign. Record your nutrients manually or scan artifacts.</p>
+                        <button class="btn btn-primary" onclick="openQuickAddModal()">Quick Add +</button>
                     </div>
 
                     <div class="card">
                         <span class="section-header">Daily Progress</span>
-                        <div style="display: flex; flex-direction: column; gap: 16px;">
+                        <div style="display: flex; flex-direction: column; gap: 20px;">
                             <!-- Calorie Progress -->
                             <div>
-                                <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
-                                    <span style="color: var(--text-secondary)">Calories</span>
-                                    <span id="statGoal" style="font-weight: 600;">2000</span>
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                                    <span style="font-family: 'Cinzel', serif; font-weight: 700; color: var(--gold-bright);">Calories</span>
+                                    <span id="statGoal" style="font-weight: 700; color: var(--accent-primary);">2000</span>
                                 </div>
-                                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <div class="progress-container">
+                                    <div id="progressFill" class="progress-fill" style="background: var(--accent-primary); width: 0%;"></div>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; margin-top: 6px;">
                                     <span id="statPercent" style="font-weight: 700; font-size: 0.75rem; color: var(--accent-primary);">0%</span>
                                     <span id="statConsumed" style="font-size: 0.75rem; color: var(--text-secondary)">0 kcal</span>
-                                </div>
-                                <div style="width: 100%; height: 10px; background: var(--bg-deep); border-radius: 5px; overflow: hidden; border: 1px solid var(--border-subtle);">
-                                    <div id="progressFill" style="height: 100%; background: var(--accent-primary); width: 0%; transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);"></div>
                                 </div>
                             </div>
 
                             <!-- Protein Progress -->
                             <div>
-                                <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
-                                    <span style="color: var(--text-secondary)">Protein</span>
-                                    <span id="proteinGoalText" style="font-weight: 600;">150g</span>
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                                    <span style="font-family: 'Cinzel', serif; font-weight: 700; color: var(--gold-bright);">Protein</span>
+                                    <span id="proteinGoalText" style="font-weight: 700; color: #3b82f6;">150g</span>
                                 </div>
-                                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <div class="progress-container">
+                                    <div id="proteinFill" class="progress-fill" style="background: #3b82f6; width: 0%;"></div>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; margin-top: 6px;">
                                     <span id="proteinPercent" style="font-weight: 700; font-size: 0.75rem; color: #3b82f6;">0%</span>
                                     <span id="proteinConsumed" style="font-size: 0.75rem; color: var(--text-secondary)">0g</span>
-                                </div>
-                                <div style="width: 100%; height: 10px; background: var(--bg-deep); border-radius: 5px; overflow: hidden; border: 1px solid var(--border-subtle);">
-                                    <div id="proteinFill" style="height: 100%; background: #3b82f6; width: 0%; transition: width 0.5s;"></div>
                                 </div>
                             </div>
 
                             <!-- Fiber Progress -->
                             <div>
-                                <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
-                                    <span style="color: var(--text-secondary)">Fiber</span>
-                                    <span id="fiberGoalText" style="font-weight: 600;">30g</span>
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                                    <span style="font-family: 'Cinzel', serif; font-weight: 700; color: var(--gold-bright);">Fiber</span>
+                                    <span id="fiberGoalText" style="font-weight: 700; color: #a855f7;">30g</span>
                                 </div>
-                                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <div class="progress-container">
+                                    <div id="fiberFill" class="progress-fill" style="background: #a855f7; width: 0%;"></div>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; margin-top: 6px;">
                                     <span id="fiberPercent" style="font-weight: 700; font-size: 0.75rem; color: #a855f7;">0%</span>
                                     <span id="fiberConsumed" style="font-size: 0.75rem; color: var(--text-secondary)">0g</span>
-                                </div>
-                                <div style="width: 100%; height: 10px; background: var(--bg-deep); border-radius: 5px; overflow: hidden; border: 1px solid var(--border-subtle);">
-                                    <div id="fiberFill" style="height: 100%; background: #a855f7; width: 0%; transition: width 0.5s;"></div>
                                 </div>
                             </div>
                         </div>
@@ -537,12 +590,12 @@
             <!-- Library Section -->
             <section id="library" class="view-section">
                 <div class="header-row">
-                    <h1 class="page-title">Food Library</h1>
+                    <h1 class="page-title">Library</h1>
                 </div>
 
                 <div class="grid-forms">
                     <div class="card">
-                        <span class="section-header">Add to Library</span>
+                        <span class="section-header">Record to Library</span>
                         <div class="input-group">
                             <label>Food Name</label>
                             <div style="display: flex; gap: 8px;">
@@ -584,18 +637,16 @@
                             <div class="input-group"><label>Potassium (mg)</label><input type="number" id="lib_potassium" placeholder="0"></div>
                         </div>
 
-                        <div class="card" style="background: var(--bg-deep); border-style: dashed; padding: 12px; margin-bottom: 16px;">
-                            <span style="font-size: 0.75rem; color: var(--text-secondary); display: block; margin-bottom: 4px;">💡 PRO TIP:</span>
-                            <p style="font-size: 0.7rem; color: var(--text-secondary); line-height: 1.4;">Take a photo of the nutrition label, use <b>iOS Live Text</b> to copy the calories/weight, and paste them here!</p>
+                        <div class="card" style="background: #000; border-style: dashed; padding: 12px; margin-bottom: 16px;">
+                            <span style="font-size: 0.7rem; color: var(--accent-primary); font-weight: 700; display: block; margin-bottom: 4px;">💡 LIVE TEXT TIP:</span>
+                            <p style="font-size: 0.7rem; color: var(--text-secondary); line-height: 1.4;">Photo the nutrition facts, use <b>iOS Live Text</b> to copy, and paste here!</p>
                         </div>
                         <button class="btn btn-primary" onclick="addToLibrary()">Save to Library</button>
                     </div>
 
                     <div class="card">
-                        <span class="section-header">Saved Foods</span>
-                        <div id="libraryList" class="log-list">
-                            <!-- Library items here -->
-                        </div>
+                        <span class="section-header">Saved Manifests</span>
+                        <div id="libraryList" class="log-list"></div>
                     </div>
                 </div>
             </section>
@@ -603,59 +654,45 @@
             <!-- History Section -->
             <section id="history" class="view-section">
                 <div class="header-row">
-                    <h1 class="page-title">Past Days</h1>
+                    <h1 class="page-title">History</h1>
                 </div>
-                <div id="historyContainer" class="log-list" style="max-width: 600px;">
-                    <!-- Archived days will appear here -->
-                </div>
+                <div id="historyContainer" class="log-list" style="max-width: 600px;"></div>
             </section>
         </main>
 
         <!-- Right Panel (Settings) -->
         <div class="right-panel">
-            <span class="section-header">Personal Settings</span>
-            <div class="card" style="background: var(--bg-deep); border-style: dashed;">
-                <span class="section-header" style="font-size: 0.7rem;">Update Daily Goals</span>
+            <span class="section-header">Campaign Settings</span>
+            <div class="card" style="background: #000; border-style: dashed;">
+                <span class="section-header" style="font-size: 0.7rem;">Adjust Objectives</span>
                 <div style="display: flex; flex-direction: column; gap: 12px;">
-                    <div>
-                        <label style="font-size: 0.7rem;">Calorie Goal</label>
-                        <input type="number" id="goalInput" placeholder="2000">
-                    </div>
+                    <div><label style="font-size: 0.7rem;">Cals</label><input type="number" id="goalInput"></div>
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                        <div>
-                            <label style="font-size: 0.7rem;">Protein (g)</label>
-                            <input type="number" id="proteinGoalInput" placeholder="150">
-                        </div>
-                        <div>
-                            <label style="font-size: 0.7rem;">Fiber (g)</label>
-                            <input type="number" id="fiberGoalInput" placeholder="30">
-                        </div>
+                        <div><label style="font-size: 0.7rem;">Protein (g)</label><input type="number" id="proteinGoalInput"></div>
+                        <div><label style="font-size: 0.7rem;">Fiber (g)</label><input type="number" id="fiberGoalInput"></div>
                     </div>
-                    <button class="btn btn-primary" style="padding: 8px;" onclick="updateGoals()">Update All Goals</button>
+                    <button class="btn btn-primary" style="padding: 10px;" onclick="updateGoals()">Update Goals</button>
                 </div>
             </div>
 
-            <div class="card" style="background: var(--bg-deep); border-style: dashed;">
-                <span class="section-header" style="font-size: 0.7rem;">Google Sheets Sync</span>
+            <div class="card" style="background: #000; border-style: dashed;">
+                <span class="section-header" style="font-size: 0.7rem;">Cloud Synchronization</span>
                 <input type="text" id="syncUrl" placeholder="https://script.google.com/..." style="margin-bottom: 12px; font-size: 0.8rem;">
-                <button class="btn btn-warning" style="padding: 8px; font-size: 0.8rem;" onclick="syncToCloud()">Sync Now</button>
-                <p style="font-size: 0.65rem; color: var(--text-secondary); margin-top: 10px; line-height: 1.3;">
-                    Sync your data to a private Google Sheet. Paste your Apps Script URL here.
-                </p>
+                <button class="btn btn-warning" style="padding: 10px; font-size: 0.8rem;" onclick="syncToCloud()">Sync Now</button>
             </div>
 
-            <div class="card" style="background: var(--bg-deep); border-style: solid; border-color: var(--accent-danger); padding: 20px;">
+            <div class="card" style="background: #000; border-style: solid; border-color: var(--accent-danger); padding: 20px;">
                 <span class="section-header" style="font-size: 0.7rem; color: var(--accent-danger);">Danger Zone</span>
-                <p style="font-size: 0.7rem; color: var(--text-secondary); margin-bottom: 12px;">To clear all data, type <b>DELETE</b> below:</p>
-                <input type="text" id="deleteConfirmInput" placeholder="Type DELETE here" style="margin-bottom: 12px; border-color: var(--accent-danger);">
-                <button class="btn btn-danger" style="padding: 8px; font-size: 0.8rem;" onclick="clearAllData()">Wipe Everything</button>
+                <p style="font-size: 0.7rem; color: var(--text-secondary); margin-bottom: 12px;">Type <b>DELETE</b> to clear all logs:</p>
+                <input type="text" id="deleteConfirmInput" placeholder="DELETE" style="margin-bottom: 12px; border-color: var(--accent-danger);">
+                <button class="btn btn-danger" style="padding: 10px; font-size: 0.8rem;" onclick="clearAllData()">Wipe Data</button>
             </div>
         </div>
     </div>
 
     <!-- Scanner Modal -->
     <div id="scannerModal">
-        <div id="scannerReader" style="width: 100%; max-width: 500px;"></div>
+        <div id="scannerReader"></div>
         <div class="scanner-controls">
             <button class="btn btn-danger" style="width: auto; padding: 12px 32px;" onclick="stopScanner()">Cancel</button>
         </div>
@@ -665,19 +702,17 @@
     <div id="quickAddModal" class="modal-overlay">
         <div class="modal-content">
             <button class="close-modal" onclick="closeQuickAddModal()">×</button>
-            <h2 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 20px;">Quick Add</h2>
+            <h2 style="font-family: 'Cinzel', serif; font-size: 1.5rem; font-weight: 700; margin-bottom: 20px; color: var(--gold-bright); text-transform: uppercase;">Quick Add</h2>
             
             <div class="input-group">
-                <label>Select from Library (Optional)</label>
-                <select id="qaLibrarySelect" onchange="applyLibrarySelectionQuickAdd()">
-                    <option value="">-- Choose saved food --</option>
-                </select>
+                <label>Library</label>
+                <select id="qaLibrarySelect" onchange="applyLibrarySelectionQuickAdd()"></select>
             </div>
 
             <div class="input-group">
                 <label>Food Name</label>
                 <div style="display: flex; gap: 8px;">
-                    <input type="text" id="qaFoodName" placeholder="What did you eat?">
+                    <input type="text" id="qaFoodName" placeholder="Intake Name">
                     <button class="btn btn-primary" style="width: auto; padding: 0 12px;" onclick="startScanner('qa')">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 0 1 2-2h2"></path><path d="M17 3h2a2 2 0 0 1 2 2v2"></path><path d="M21 17v2a2 2 0 0 1-2 2h-2"></path><path d="M7 21H5a2 2 0 0 1-2-2v-2"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg>
                     </button>
@@ -686,64 +721,45 @@
 
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
                 <div class="input-group" style="margin-bottom: 0;">
-                    <label>Qty (How many?)</label>
-                    <input type="number" id="qaAmount" placeholder="e.g. 1, 2" oninput="calculatePortionRealtime()" value="1">
+                    <label>Qty (Count)</label>
+                    <input type="number" id="qaAmount" value="1" oninput="calculatePortionRealtime()">
                 </div>
                 <div class="input-group" style="margin-bottom: 0;">
-                    <label>Weight per Item</label>
+                    <label>Weight / Item</label>
                     <div style="display: flex; gap: 4px;">
                         <input type="number" id="qaWeight" placeholder="0" oninput="calculatePortionRealtime()" style="flex: 1;">
                         <select id="qaWeightUnit" onchange="calculatePortionRealtime()" style="width: auto; padding: 8px;">
-                            <option value="g">g</option>
-                            <option value="oz">oz</option>
-                            <option value="ml">ml</option>
+                            <option value="g">g</option><option value="oz">oz</option><option value="ml">ml</option>
                         </select>
                     </div>
                 </div>
             </div>
 
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
-                <div class="input-group" style="margin-bottom: 0;">
-                    <label>Total Calories</label>
-                    <input type="number" id="qaCals" placeholder="0">
-                </div>
-                <div class="input-group" style="margin-bottom: 0;">
-                    <label>Meal</label>
-                    <select id="qaMeal">
-                        <option value="Breakfast">Breakfast</option>
-                        <option value="Lunch">Lunch</option>
-                        <option value="Dinner">Dinner</option>
-                        <option value="Snack">Snack</option>
-                    </select>
-                </div>
+                <div class="input-group" style="margin-bottom: 0;"><label>Total Cals</label><input type="number" id="qaCals"></div>
+                <div class="input-group" style="margin-bottom: 0;"><label>Meal</label><select id="qaMeal"><option value="Breakfast">Breakfast</option><option value="Lunch">Lunch</option><option value="Dinner">Dinner</option><option value="Snack">Snack</option></select></div>
             </div>
             
-            <div style="background: var(--bg-deep); padding: 16px; border-radius: 12px; margin-bottom: 20px; border: 1px solid var(--border-subtle);">
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-                    <div>
-                        <span style="font-size: 0.75rem; color: var(--text-secondary);">Base Serving Info</span>
-                        <input type="text" id="qaBaseServing" placeholder="e.g. 1 cup" style="margin-top: 4px; padding: 8px; font-size: 0.85rem;">
-                    </div>
-                    <div>
-                        <span style="font-size: 0.75rem; color: var(--text-secondary);">Base Weight/Cals</span>
-                        <div style="display: flex; gap: 4px; margin-top: 4px;">
-                            <input type="number" id="qaBaseWeight" placeholder="Weight" style="padding: 8px; font-size: 0.85rem;" oninput="calculatePortionRealtime()">
-                            <select id="qaBaseUnit" onchange="calculatePortionRealtime()" style="width: auto; padding: 4px; font-size: 0.75rem;">
-                                <option value="g">g</option>
-                                <option value="oz">oz</option>
-                                <option value="ml">ml</option>
-                            </select>
-                        </div>
-                        <input type="number" id="qaBaseCals" placeholder="Cals" style="margin-top: 4px; padding: 8px; font-size: 0.85rem;" oninput="calculatePortionRealtime()">
-                    </div>
-                    <div>
-                        <span style="font-size: 0.75rem; color: var(--text-secondary);">Protein (g)</span>
-                        <input type="number" id="qaBaseProtein" placeholder="0" style="margin-top: 4px; padding: 8px; font-size: 0.85rem;">
-                    </div>
-                    <div>
-                        <span style="font-size: 0.75rem; color: var(--text-secondary);">Fiber (g)</span>
-                        <input type="number" id="qaBaseFiber" placeholder="0" style="margin-top: 4px; padding: 8px; font-size: 0.85rem;">
-                    </div>
+            <div class="card" style="background: #000; padding: 16px; margin-bottom: 20px;">
+                <span class="section-header" style="font-size: 0.65rem;">Nutrition Facts (1 Serving)</span>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; max-height: 300px; overflow-y: auto;" class="nutrition-grid">
+                    <div class="input-group"><label>Base Wt</label><input type="number" id="qaBaseWeight" oninput="calculatePortionRealtime()"></div>
+                    <div class="input-group"><label>Base Unit</label><select id="qaBaseUnit" onchange="calculatePortionRealtime()"><option value="g">g</option><option value="oz">oz</option><option value="ml">ml</option></select></div>
+                    <div class="input-group"><label>Base Cals</label><input type="number" id="qaBaseCals" oninput="calculatePortionRealtime()"></div>
+                    <div class="input-group"><label>Protein (g)</label><input type="number" id="qaBaseProtein"></div>
+                    <div class="input-group"><label>Fiber (g)</label><input type="number" id="qaBaseFiber"></div>
+                    <div class="input-group"><label>Total Fat (g)</label><input type="number" id="qaBaseFat"></div>
+                    <div class="input-group"><label>Sat Fat (g)</label><input type="number" id="qaBaseSatFat"></div>
+                    <div class="input-group"><label>Trans Fat (g)</label><input type="number" id="qaBaseTransFat"></div>
+                    <div class="input-group"><label>Cholesterol (mg)</label><input type="number" id="qaBaseCholesterol"></div>
+                    <div class="input-group"><label>Sodium (mg)</label><input type="number" id="qaBaseSodium"></div>
+                    <div class="input-group"><label>Total Carbs (g)</label><input type="number" id="qaBaseCarbs"></div>
+                    <div class="input-group"><label>Sugars (g)</label><input type="number" id="qaBaseSugars"></div>
+                    <div class="input-group"><label>Added Sugars (g)</label><input type="number" id="qaBaseAddedSugars"></div>
+                    <div class="input-group"><label>Vit D (mcg)</label><input type="number" id="qaBaseVitD"></div>
+                    <div class="input-group"><label>Calcium (mg)</label><input type="number" id="qaBaseCalcium"></div>
+                    <div class="input-group"><label>Iron (mg)</label><input type="number" id="qaBaseIron"></div>
+                    <div class="input-group"><label>Potassium (mg)</label><input type="number" id="qaBasePotassium"></div>
                 </div>
             </div>
 
@@ -752,29 +768,16 @@
     </div>
 
     <script>
-        let state = {
-            dailyGoal: 2000,
-            proteinGoal: 150,
-            fiberGoal: 30,
-            logs: [],
-            history: [],
-            foodLibrary: []
-        };
+        let state = { dailyGoal: 2000, proteinGoal: 150, fiberGoal: 30, logs: [], history: [], foodLibrary: [] };
 
         function switchView(viewId, el) {
             document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            
             document.getElementById(viewId).classList.add('active');
             if (el) el.classList.add('active');
-            
             const appContainer = document.querySelector('.app-container');
-            if (viewId === 'dashboard') {
-                appContainer.classList.add('dashboard-active');
-            } else {
-                appContainer.classList.remove('dashboard-active');
-            }
-            
+            if (viewId === 'dashboard') appContainer.classList.add('dashboard-active');
+            else appContainer.classList.remove('dashboard-active');
             if (viewId === 'history') renderHistory();
             if (viewId === 'log') renderList('fullLoggedList', state.logs);
             if (viewId === 'library') renderLibrary();
@@ -782,561 +785,276 @@
 
         function loadState() {
             const saved = localStorage.getItem('foodTrackerState');
-            if (saved) {
-                const loaded = JSON.parse(saved);
-                state = { ...state, ...loaded };
-            }
-            
+            if (saved) { state = { ...state, ...JSON.parse(saved) }; }
             document.getElementById('goalInput').value = state.dailyGoal;
             document.getElementById('proteinGoalInput').value = state.proteinGoal || 150;
             document.getElementById('fiberGoalInput').value = state.fiberGoal || 30;
-            
             const savedSyncUrl = localStorage.getItem('foodTrackerSyncUrl');
-            if (savedSyncUrl) {
-                document.getElementById('syncUrl').value = savedSyncUrl;
-            }
-
+            if (savedSyncUrl) document.getElementById('syncUrl').value = savedSyncUrl;
             document.querySelector('.app-container').classList.add('dashboard-active');
             updateUI();
         }
 
-        function saveState() {
-            localStorage.setItem('foodTrackerState', JSON.stringify(state));
-        }
+        function saveState() { localStorage.setItem('foodTrackerState', JSON.stringify(state)); }
 
-        // --- Quick Add Modal Logic ---
-        function openQuickAddModal() {
-            document.getElementById('quickAddModal').style.display = 'flex';
-            updateLibraryDropdown();
-        }
-
-        function closeQuickAddModal() {
-            document.getElementById('quickAddModal').style.display = 'none';
-        }
+        function openQuickAddModal() { document.getElementById('quickAddModal').style.display = 'flex'; updateLibraryDropdown(); }
+        function closeQuickAddModal() { document.getElementById('quickAddModal').style.display = 'none'; }
 
         function applyLibrarySelectionQuickAdd() {
             const id = document.getElementById('qaLibrarySelect').value;
             if (!id) {
-                document.getElementById('qaFoodName').value = '';
-                document.getElementById('qaBaseCals').value = '';
-                document.getElementById('qaBaseServing').value = '';
-                document.getElementById('qaBaseWeight').value = '';
-                document.getElementById('qaBaseUnit').value = 'g';
-                document.getElementById('qaBaseProtein').value = '';
-                document.getElementById('qaBaseFiber').value = '';
-                document.getElementById('qaAmount').value = '1';
-                document.getElementById('qaWeight').value = '';
-                document.getElementById('qaWeightUnit').value = 'g';
-                document.getElementById('qaCals').value = '';
+                document.querySelectorAll('.nutrition-grid input').forEach(i => i.value = '');
                 return;
             }
             const food = state.foodLibrary.find(f => f.id == id);
             if (food) {
                 document.getElementById('qaFoodName').value = food.name;
                 document.getElementById('qaBaseCals').value = food.calories;
-                document.getElementById('qaBaseServing').value = food.serving || '1 serving';
                 document.getElementById('qaBaseWeight').value = food.weight || 100;
                 document.getElementById('qaBaseUnit').value = food.unit || 'g';
                 document.getElementById('qaBaseProtein').value = food.protein || 0;
                 document.getElementById('qaBaseFiber').value = food.fiber || 0;
-                
+                document.getElementById('qaBaseFat').value = food.fat || 0;
+                document.getElementById('qaBaseSatFat').value = food.satFat || 0;
+                document.getElementById('qaBaseTransFat').value = food.transFat || 0;
+                document.getElementById('qaBaseCholesterol').value = food.cholesterol || 0;
+                document.getElementById('qaBaseSodium').value = food.sodium || 0;
+                document.getElementById('qaBaseCarbs').value = food.carbs || 0;
+                document.getElementById('qaBaseSugars').value = food.sugars || 0;
+                document.getElementById('qaBaseAddedSugars').value = food.addedSugars || 0;
+                document.getElementById('qaBaseVitD').value = food.vitD || 0;
+                document.getElementById('qaBaseCalcium').value = food.calcium || 0;
+                document.getElementById('qaBaseIron').value = food.iron || 0;
+                document.getElementById('qaBasePotassium').value = food.potassium || 0;
                 document.getElementById('qaAmount').value = 1;
                 document.getElementById('qaWeight').value = food.weight || 0;
                 document.getElementById('qaWeightUnit').value = food.unit || 'g';
-                
                 calculatePortionRealtime();
             }
         }
 
-        function convertToGrams(value, unit) {
-            if (unit === 'oz') return value * 28.3495;
-            return value;
-        }
+        function convertToGrams(value, unit) { return (unit === 'oz') ? value * 28.3495 : value; }
 
         function calculatePortionRealtime() {
             const qty = parseFloat(document.getElementById('qaAmount').value) || 0;
             const enteredWeight = parseFloat(document.getElementById('qaWeight').value) || 0;
             const enteredUnit = document.getElementById('qaWeightUnit').value;
-            
             const baseWeight = parseFloat(document.getElementById('qaBaseWeight').value) || 0;
             const baseUnit = document.getElementById('qaBaseUnit').value;
             const baseCals = parseInt(document.getElementById('qaBaseCals').value) || 0;
 
             if (qty > 0 && baseWeight > 0) {
-                let totalMassMultiplier = 1;
-                
+                let multiplier = qty;
                 if (enteredWeight > 0) {
-                    const massInGrams = convertToGrams(enteredWeight, enteredUnit) * qty;
-                    const baseInGrams = convertToGrams(baseWeight, baseUnit);
-                    totalMassMultiplier = massInGrams / baseInGrams;
-                } else {
-                    totalMassMultiplier = qty;
+                    multiplier = (convertToGrams(enteredWeight, enteredUnit) * qty) / convertToGrams(baseWeight, baseUnit);
                 }
-
-                document.getElementById('qaCals').value = Math.round(totalMassMultiplier * baseCals);
-            } else {
-                document.getElementById('qaCals').value = '';
-            }
+                document.getElementById('qaCals').value = Math.round(multiplier * baseCals);
+            } else { document.getElementById('qaCals').value = ''; }
         }
 
-        // --- Scanner & Sync Logic ---
-        let scannerContext = null;
-        let html5QrCode = null;
-
+        let scannerContext = null; let html5QrCode = null;
         async function startScanner(context) {
-            scannerContext = context;
-            const modal = document.getElementById('scannerModal');
-            modal.style.display = 'flex';
-            
+            scannerContext = context; document.getElementById('scannerModal').style.display = 'flex';
             html5QrCode = new Html5Qrcode("scannerReader");
-            const config = { fps: 10, qrbox: { width: 250, height: 150 } };
-
             try {
-                await html5QrCode.start(
-                    { facingMode: "environment" }, 
-                    config, 
-                    (decodedText) => {
-                        stopScanner();
-                        fetchProductData(decodedText);
-                    }
-                );
-            } catch (err) {
-                alert("Camera error: " + err);
-                stopScanner();
-            }
+                await html5QrCode.start({ facingMode: "environment" }, { fps: 10, qrbox: { width: 250, height: 150 } }, (text) => { stopScanner(); fetchProductData(text); });
+            } catch (err) { alert("Camera error: " + err); stopScanner(); }
         }
 
         async function stopScanner() {
-            const modal = document.getElementById('scannerModal');
-            if (html5QrCode) {
-                try {
-                    await html5QrCode.stop();
-                    await html5QrCode.clear();
-                } catch (e) { console.log(e); }
-                html5QrCode = null;
-            }
-            modal.style.display = 'none';
+            if (html5QrCode) { try { await html5QrCode.stop(); await html5QrCode.clear(); } catch (e) {} html5QrCode = null; }
+            document.getElementById('scannerModal').style.display = 'none';
         }
 
         async function fetchProductData(barcode) {
-            const cleanBarcode = barcode.trim();
+            const clean = barcode.trim();
             try {
-                // 1. Try Open Food Facts
-                let res = await fetch(`https://world.openfoodfacts.org/api/v2/product/${cleanBarcode}.json`, {
-                    headers: { 'User-Agent': 'FoodTrackerApp - iOS/PWA - 1.0' }
-                });
+                let res = await fetch(`https://world.openfoodfacts.org/api/v2/product/${clean}.json`, { headers: { 'User-Agent': 'FoodTrackerApp-Roman-1.0' } });
                 let data = await res.json();
-
                 if (data.status === 1) {
-                    const product = data.product;
-                    const nut = product.nutriments || {};
-
-                    const nutrition = {
-                        name: product.product_name || "Unknown Product",
-                        calories: Math.round(nut['energy-kcal_serving'] || nut['energy-kcal_100g'] || 0),
-                        serving: product.serving_quantity ? product.serving_quantity + (product.serving_quantity_unit || 'g') : '100g',
-                        weight: product.serving_quantity || 100,
-                        unit: product.serving_quantity_unit || 'g',
-                        protein: Math.round((nut['proteins_serving'] || nut['proteins_100g'] || 0) * 10) / 10,
-                        fiber: Math.round((nut['fiber_serving'] || nut['fiber_100g'] || 0) * 10) / 10,
-                        fat: Math.round((nut['fat_serving'] || nut['fat_100g'] || 0) * 10) / 10,
-                        satFat: Math.round((nut['saturated-fat_serving'] || nut['saturated-fat_100g'] || 0) * 10) / 10,
-                        carbs: Math.round((nut['carbohydrates_serving'] || nut['carbohydrates_100g'] || 0) * 10) / 10,
-                        sugar: Math.round((nut['sugars_serving'] || nut['sugars_100g'] || 0) * 10) / 10,
-                        sodium: Math.round((nut['sodium_serving'] || nut['sodium_100g'] || 0) * 1000)
-                    };
-
-                    fillScannerData(nutrition);
+                    const p = data.product; const n = p.nutriments || {};
+                    fillScannerData({
+                        name: p.product_name || "Unknown Product", calories: Math.round(n['energy-kcal_serving'] || n['energy-kcal_100g'] || 0),
+                        serving: p.serving_quantity ? p.serving_quantity + (p.serving_quantity_unit || 'g') : '100g',
+                        weight: p.serving_quantity || 100, unit: p.serving_quantity_unit || 'g',
+                        protein: n['proteins_serving'] || n['proteins_100g'] || 0, fiber: n['fiber_serving'] || n['fiber_100g'] || 0,
+                        fat: n['fat_serving'] || n['fat_100g'] || 0, satFat: n['saturated-fat_serving'] || n['saturated-fat_100g'] || 0,
+                        carbs: n['carbohydrates_serving'] || n['carbohydrates_100g'] || 0, sugar: n['sugars_serving'] || n['sugars_100g'] || 0, sodium: (n['sodium_serving'] || n['sodium_100g'] || 0) * 1000
+                    });
                     return;
                 }
-
-                // 2. Try UPCItemDB Fallback
-                try {
-                    res = await fetch(`https://api.upcitemdb.com/prod/trial/lookup?upc=${cleanBarcode}`);
-                    data = await res.json();
-
-                    if (data.code === 'OK' && data.items && data.items.length > 0) {
-                        const item = data.items[0];
-                        const nutrition = {
-                            name: item.title || "Unknown Product",
-                            calories: 0,
-                            serving: '1 serving',
-                            weight: 100,
-                            unit: 'g',
-                            protein: 0, fiber: 0, fat: 0, satFat: 0, carbs: 0, sugar: 0, sodium: 0
-                        };
-                        fillScannerData(nutrition);
-                        alert("Product found via Backup Database. Nutrition info might be missing—please verify manually.");
-                        return;
-                    }
-                } catch (e) {
-                    console.log("Backup DB error or blocked.");
+                res = await fetch(`https://api.upcitemdb.com/prod/trial/lookup?upc=${clean}`);
+                data = await res.json();
+                if (data.code === 'OK' && data.items?.length > 0) {
+                    fillScannerData({ name: data.items[0].title, calories: 0, serving: '1 unit', weight: 100, unit: 'g', protein: 0, fiber: 0, fat: 0, carbs: 0, sodium: 0 });
+                    alert("Found in backup. Please input nutrition facts manually."); return;
                 }
-
-                if (confirm("Product not found in our databases. Would you like to search the web for this barcode?")) {
-                    window.open(`https://www.google.com/search?q=${cleanBarcode}+nutrition+facts`, '_blank');
-                }
-
-            } catch (err) {
-                alert("Scan Error: " + err.message + "\nTry again or check your connection.");
-            }
+                if (confirm("Not found. Search web?")) window.open(`https://www.google.com/search?q=${clean}+nutrition+facts`, '_blank');
+            } catch (err) { alert("Scan Error: " + err.message); }
         }
 
-        function fillScannerData(nutrition) {
-            if (scannerContext === 'qa' || scannerContext === 'food') {
-                document.getElementById('qaFoodName').value = nutrition.name;
-                document.getElementById('qaBaseCals').value = nutrition.calories;
-                document.getElementById('qaBaseServing').value = nutrition.serving;
-                document.getElementById('qaBaseWeight').value = nutrition.weight;
-                document.getElementById('qaBaseUnit').value = nutrition.unit || 'g';
-                document.getElementById('qaBaseProtein').value = nutrition.protein;
-                document.getElementById('qaBaseFiber').value = nutrition.fiber;
-                
-                document.getElementById('qaAmount').value = 1;
-                document.getElementById('qaWeight').value = nutrition.weight;
-                document.getElementById('qaWeightUnit').value = nutrition.unit || 'g';
-                
+        function fillScannerData(nut) {
+            if (scannerContext === 'qa') {
+                document.getElementById('qaFoodName').value = nut.name;
+                document.getElementById('qaBaseCals').value = nut.calories;
+                document.getElementById('qaBaseWeight').value = nut.weight;
+                document.getElementById('qaBaseUnit').value = nut.unit || 'g';
+                document.getElementById('qaBaseProtein').value = Math.round(nut.protein * 10) / 10;
+                document.getElementById('qaBaseFiber').value = Math.round(nut.fiber * 10) / 10;
+                document.getElementById('qaBaseFat').value = Math.round(nut.fat * 10) / 10;
+                document.getElementById('qaBaseCarbs').value = Math.round(nut.carbs * 10) / 10;
+                document.getElementById('qaBaseSodium').value = Math.round(nut.sodium);
+                document.getElementById('qaAmount').value = 1; document.getElementById('qaWeight').value = nut.weight;
                 calculatePortionRealtime();
             } else {
-                document.getElementById('libFoodName').value = nutrition.name;
-                document.getElementById('lib_calories').value = nutrition.calories;
-                document.getElementById('libFoodWeight').value = nutrition.weight;
-                document.getElementById('libFoodUnit').value = nutrition.unit || 'g';
-                document.getElementById('lib_serving').value = nutrition.serving;
-                document.getElementById('lib_protein').value = nutrition.protein;
-                document.getElementById('lib_fiber').value = nutrition.fiber;
-                document.getElementById('lib_fat').value = nutrition.fat;
-                document.getElementById('lib_satFat').value = nutrition.satFat;
-                document.getElementById('lib_carbs').value = nutrition.carbs;
-                document.getElementById('lib_sugars').value = nutrition.sugar;
-                document.getElementById('lib_sodium').value = Math.round(nutrition.sodium);
+                document.getElementById('libFoodName').value = nut.name; document.getElementById('lib_calories').value = nut.calories;
+                document.getElementById('libFoodWeight').value = nut.weight; document.getElementById('libFoodUnit').value = nut.unit || 'g';
+                document.getElementById('lib_protein').value = Math.round(nut.protein * 10) / 10;
+                document.getElementById('lib_fiber').value = Math.round(nut.fiber * 10) / 10;
+                document.getElementById('lib_fat').value = Math.round(nut.fat * 10) / 10;
+                document.getElementById('lib_carbs').value = Math.round(nut.carbs * 10) / 10;
+                document.getElementById('lib_sodium').value = Math.round(nut.sodium);
             }
         }
 
         async function syncToCloud() {
-            const url = document.getElementById('syncUrl').value;
-            if (!url) return alert("Please enter your Google Apps Script URL first.");
-            try {
-                await fetch(url, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    body: JSON.stringify(state)
-                });
-                alert("Sync request sent!");
-                localStorage.setItem('foodTrackerSyncUrl', url);
-            } catch (err) {
-                alert("Sync failed.");
-            }
+            const url = document.getElementById('syncUrl').value; if (!url) return alert("Enter Sync URL.");
+            try { await fetch(url, { method: 'POST', mode: 'no-cors', body: JSON.stringify(state) }); alert("Sync sent!"); localStorage.setItem('foodTrackerSyncUrl', url); }
+            catch (err) { alert("Sync failed."); }
         }
 
         function updateGoals() {
-            const newGoal = parseInt(document.getElementById('goalInput').value);
-            const newProtein = parseInt(document.getElementById('proteinGoalInput').value);
-            const newFiber = parseInt(document.getElementById('fiberGoalInput').value);
-
-            if (isNaN(newGoal) || newGoal <= 0) return alert("Please enter valid goals.");
-            
-            state.dailyGoal = newGoal;
-            state.proteinGoal = newProtein || 150;
-            state.fiberGoal = newFiber || 30;
-            
-            saveState();
-            updateUI();
-            alert("Goals updated!");
+            state.dailyGoal = parseInt(document.getElementById('goalInput').value) || 2000;
+            state.proteinGoal = parseInt(document.getElementById('proteinGoalInput').value) || 150;
+            state.fiberGoal = parseInt(document.getElementById('fiberGoalInput').value) || 30;
+            saveState(); updateUI(); alert("Goals updated!");
         }
 
         function archiveDay() {
-            const totalConsumed = state.logs.reduce((sum, l) => sum + l.calories, 0);
-            const totalProtein = state.logs.reduce((sum, l) => sum + (l.protein || 0), 0);
-            const dateStr = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
-            
-            if (state.logs.length === 0 && !confirm("No logs for today. Archive anyway?")) return;
-
+            if (state.logs.length === 0 && !confirm("Archive empty day?")) return;
             state.history.push({
-                id: Date.now(),
-                date: dateStr,
-                totalConsumed: totalConsumed,
-                totalProtein: totalProtein,
-                goal: state.dailyGoal,
-                timestamp: new Date().toISOString()
+                id: Date.now(), date: new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' }),
+                totalConsumed: state.logs.reduce((s, l) => s + l.calories, 0),
+                totalProtein: state.logs.reduce((s, l) => s + (l.protein || 0), 0),
+                totalFiber: state.logs.reduce((s, l) => s + (l.fiber || 0), 0),
+                goal: state.dailyGoal, timestamp: new Date().toISOString()
             });
-
-            state.logs = [];
-            saveState();
-            updateUI();
-            alert(`Day archived: ${dateStr}`);
-            switchView('dashboard', document.querySelector('.nav-item'));
+            state.logs = []; saveState(); updateUI(); switchView('dashboard', document.querySelector('.nav-item'));
         }
 
-        function deleteHistory(id) {
-            if (confirm("Delete this history record?")) {
-                state.history = state.history.filter(h => h.id !== id);
-                saveState();
-                renderHistory();
-            }
-        }
+        function deleteHistory(id) { if (confirm("Delete record?")) { state.history = state.history.filter(h => h.id !== id); saveState(); renderHistory(); } }
 
         function addToLibrary() {
             const name = document.getElementById('libFoodName').value;
             const calories = parseInt(document.getElementById('lib_calories').value);
-            const weight = parseInt(document.getElementById('libFoodWeight').value) || 100;
-            const unit = document.getElementById('libFoodUnit').value || 'g';
-            const serving = document.getElementById('lib_serving').value || '1 serving';
-
-            if (!name || isNaN(calories)) return alert('Please enter name and calories.');
-
-            const food = {
-                id: Date.now(),
-                name: name,
-                calories: calories,
-                weight: weight,
-                unit: unit,
-                serving: serving,
-                protein: parseFloat(document.getElementById('lib_protein').value) || 0,
-                fiber: parseFloat(document.getElementById('lib_fiber').value) || 0,
-                fat: parseFloat(document.getElementById('lib_fat').value) || 0,
-                satFat: parseFloat(document.getElementById('lib_satFat').value) || 0,
-                transFat: parseFloat(document.getElementById('lib_transFat').value) || 0,
-                cholesterol: parseFloat(document.getElementById('lib_cholesterol').value) || 0,
-                sodium: parseFloat(document.getElementById('lib_sodium').value) || 0,
-                carbs: parseFloat(document.getElementById('lib_carbs').value) || 0,
-                sugars: parseFloat(document.getElementById('lib_sugars').value) || 0,
-                addedSugars: parseFloat(document.getElementById('lib_addedSugars').value) || 0,
-                vitD: parseFloat(document.getElementById('lib_vitD').value) || 0,
-                calcium: parseFloat(document.getElementById('lib_calcium').value) || 0,
-                iron: parseFloat(document.getElementById('lib_iron').value) || 0,
-                potassium: parseFloat(document.getElementById('lib_potassium').value) || 0
-            };
-
-            state.foodLibrary.push(food);
-            
-            document.getElementById('libFoodName').value = '';
-            document.querySelectorAll('.nutrition-grid input').forEach(i => i.value = '');
-            
-            saveState();
-            updateUI();
-            renderLibrary();
+            if (!name || isNaN(calories)) return alert('Name and calories required.');
+            state.foodLibrary.push({
+                id: Date.now(), name, calories, weight: parseInt(document.getElementById('libFoodWeight').value) || 100,
+                unit: document.getElementById('libFoodUnit').value, serving: document.getElementById('lib_serving').value,
+                protein: parseFloat(document.getElementById('lib_protein').value) || 0, fiber: parseFloat(document.getElementById('lib_fiber').value) || 0,
+                fat: parseFloat(document.getElementById('lib_fat').value) || 0, satFat: parseFloat(document.getElementById('lib_satFat').value) || 0,
+                transFat: parseFloat(document.getElementById('lib_transFat').value) || 0, cholesterol: parseFloat(document.getElementById('lib_cholesterol').value) || 0,
+                sodium: parseFloat(document.getElementById('lib_sodium').value) || 0, carbs: parseFloat(document.getElementById('lib_carbs').value) || 0,
+                sugars: parseFloat(document.getElementById('lib_sugars').value) || 0, addedSugars: parseFloat(document.getElementById('lib_addedSugars').value) || 0,
+                vitD: parseFloat(document.getElementById('lib_vitD').value) || 0, calcium: parseFloat(document.getElementById('lib_calcium').value) || 0,
+                iron: parseFloat(document.getElementById('lib_iron').value) || 0, potassium: parseFloat(document.getElementById('lib_potassium').value) || 0
+            });
+            document.getElementById('libFoodName').value = ''; document.querySelectorAll('.nutrition-grid input').forEach(i => i.value = '');
+            saveState(); updateUI(); renderLibrary();
         }
 
-        function deleteLibraryItem(id) {
-            if (confirm("Remove this food from library?")) {
-                state.foodLibrary = state.foodLibrary.filter(f => f.id !== id);
-                saveState();
-                updateUI();
-                renderLibrary();
-            }
-        }
+        function deleteLibraryItem(id) { if (confirm("Remove?")) { state.foodLibrary = state.foodLibrary.filter(f => f.id !== id); saveState(); updateUI(); renderLibrary(); } }
 
         function renderLibrary() {
-            const el = document.getElementById('libraryList');
-            el.innerHTML = state.foodLibrary.length ? '' : '<div style="color: var(--text-secondary); text-align: center; padding: 20px;">Library is empty</div>';
-            
+            const el = document.getElementById('libraryList'); el.innerHTML = state.foodLibrary.length ? '' : '<div style="color: var(--text-secondary); text-align: center; padding: 20px;">Library empty</div>';
             [...state.foodLibrary].reverse().forEach(food => {
-                const div = document.createElement('div');
-                div.className = 'log-item';
-                div.innerHTML = `
-                    <div class="log-info">
-                        <span class="food-name">${food.name}</span>
-                        <span class="meal-cat">${food.calories} kcal / ${food.serving} (${food.weight}${food.unit}) | P: ${food.protein}g</span>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 12px;">
-                        <button class="btn btn-primary" style="padding: 4px 8px; font-size: 0.7rem; width: auto;" onclick="quickAddFromLibrary(${food.id})">Use</button>
-                        <button class="delete-btn" onclick="deleteLibraryItem(${food.id})">✕</button>
-                    </div>
-                `;
+                const div = document.createElement('div'); div.className = 'log-item';
+                div.innerHTML = `<div class="log-info"><span class="food-name">${food.name}</span><span class="meal-cat">${food.calories} kcal / ${food.weight}${food.unit}</span></div>
+                <div style="display: flex; gap: 8px;"><button class="btn btn-primary" style="padding: 4px 10px; font-size: 0.7rem; width: auto;" onclick="quickAddFromLibrary(${food.id})">Use</button><button class="delete-btn" onclick="deleteLibraryItem(${food.id})">✕</button></div>`;
                 el.appendChild(div);
             });
         }
 
-        function quickAddFromLibrary(id) {
-            const food = state.foodLibrary.find(f => f.id === id);
-            if (food) {
-                switchView('dashboard', document.querySelector('.nav-item'));
-                openQuickAddModal();
-                document.getElementById('qaLibrarySelect').value = id;
-                applyLibrarySelectionQuickAdd();
-            }
-        }
+        function quickAddFromLibrary(id) { const food = state.foodLibrary.find(f => f.id === id); if (food) { switchView('dashboard', document.querySelector('.nav-item')); openQuickAddModal(); document.getElementById('qaLibrarySelect').value = id; applyLibrarySelectionQuickAdd(); } }
 
         function updateLibraryDropdown() {
-            const select = document.getElementById('qaLibrarySelect');
-            if(!select) return;
-            const currentValue = select.value;
-            select.innerHTML = '<option value="">-- Choose saved food --</option>';
-            state.foodLibrary.sort((a, b) => a.name.localeCompare(b.name)).forEach(food => {
-                const opt = document.createElement('option');
-                opt.value = food.id;
-                opt.textContent = food.name + ` (${food.serving})`;
-                select.appendChild(opt);
-            });
-            select.value = currentValue;
+            const select = document.getElementById('qaLibrarySelect'); if(!select) return; select.innerHTML = '<option value="">-- Choose saved food --</option>';
+            state.foodLibrary.sort((a,b) => a.name.localeCompare(b.name)).forEach(f => { const o = document.createElement('option'); o.value = f.id; o.textContent = `${f.name} (${f.serving || f.weight + f.unit})`; select.appendChild(o); });
         }
 
         function addFoodQuick() {
-            const name = document.getElementById('qaFoodName').value;
-            const totalCals = parseInt(document.getElementById('qaCals').value);
+            const name = document.getElementById('qaFoodName').value; const totalCals = parseInt(document.getElementById('qaCals').value);
+            if (!name || isNaN(totalCals)) return alert('Missing info.');
             const qty = parseFloat(document.getElementById('qaAmount').value) || 1;
-            const weightPerItem = parseFloat(document.getElementById('qaWeight').value) || 0;
+            const wItem = parseFloat(document.getElementById('qaWeight').value) || 0;
             const unit = document.getElementById('qaWeightUnit').value;
-            const meal = document.getElementById('qaMeal').value;
-
-            if (!name || isNaN(totalCals)) return alert('Please enter food name and ensure calories are calculated.');
-
-            const baseProtein = parseFloat(document.getElementById('qaBaseProtein').value) || 0;
-            const baseFiber = parseFloat(document.getElementById('qaBaseFiber').value) || 0;
-            const baseWeight = parseFloat(document.getElementById('qaBaseWeight').value) || 100;
-            const baseUnit = document.getElementById('qaBaseUnit').value;
-
-            let totalMassMultiplier = qty;
-            if (weightPerItem > 0) {
-                const massInGrams = convertToGrams(weightPerItem, unit) * qty;
-                const baseInGrams = convertToGrams(baseWeight, baseUnit);
-                totalMassMultiplier = massInGrams / baseInGrams;
-            }
-
-            const protein = Math.round(baseProtein * totalMassMultiplier * 10) / 10;
-            const fiber = Math.round(baseFiber * totalMassMultiplier * 10) / 10;
-
+            const baseW = parseFloat(document.getElementById('qaBaseWeight').value) || 100;
+            const baseU = document.getElementById('qaBaseUnit').value;
+            let mult = qty; if (wItem > 0) mult = (convertToGrams(wItem, unit) * qty) / convertToGrams(baseW, baseU);
             state.logs.push({ 
-                id: Date.now(), 
-                name, 
-                calories: totalCals, 
-                meal, 
-                amount: qty, 
-                weight: weightPerItem, 
-                unit: unit,
-                protein, 
-                fiber
+                id: Date.now(), name, calories: totalCals, meal: document.getElementById('qaMeal').value,
+                protein: Math.round(parseFloat(document.getElementById('qaBaseProtein').value || 0) * mult * 10) / 10,
+                fiber: Math.round(parseFloat(document.getElementById('qaBaseFiber').value || 0) * mult * 10) / 10
             });
-            
-            document.getElementById('qaFoodName').value = '';
-            document.getElementById('qaCals').value = '';
-            document.getElementById('qaAmount').value = '1';
-            document.getElementById('qaWeight').value = '';
-            document.getElementById('qaBaseCals').value = '';
-            document.getElementById('qaBaseServing').value = '';
-            document.getElementById('qaBaseWeight').value = '';
-            document.getElementById('qaBaseProtein').value = '';
-            document.getElementById('qaBaseFiber').value = '';
-            document.getElementById('qaLibrarySelect').value = '';
-            
-            closeQuickAddModal();
-            saveState();
-            updateUI();
+            closeQuickAddModal(); saveState(); updateUI();
         }
 
-        function deleteLog(id) {
-            state.logs = state.logs.filter(l => l.id !== id);
-            saveState();
-            updateUI();
-            if (document.getElementById('log').classList.contains('active')) renderList('fullLoggedList', state.logs);
-        }
+        function deleteLog(id) { state.logs = state.logs.filter(l => l.id !== id); saveState(); updateUI(); if (document.getElementById('log').classList.contains('active')) renderList('fullLoggedList', state.logs); }
 
         function clearAllData() {
-            if (document.getElementById('deleteConfirmInput').value !== 'DELETE') return alert("Type DELETE to confirm.");
-            if (confirm("Wipe all data permanently?")) {
-                state = { dailyGoal: 2000, proteinGoal: 150, fiberGoal: 30, logs: [], history: [], foodLibrary: [] };
-                saveState();
-                updateUI();
-                document.getElementById('deleteConfirmInput').value = '';
-                alert("All data cleared.");
-            }
+            if (document.getElementById('deleteConfirmInput').value !== 'DELETE') return alert("Type DELETE.");
+            if (confirm("Wipe everything?")) { state = { dailyGoal: 2000, proteinGoal: 150, fiberGoal: 30, logs: [], history: [], foodLibrary: [] }; saveState(); updateUI(); document.getElementById('deleteConfirmInput').value = ''; alert("Cleared."); }
         }
 
         function updateUI() {
-            const consumed = state.logs.reduce((sum, l) => sum + l.calories, 0);
-            const proteinConsumed = state.logs.reduce((sum, l) => sum + (l.protein || 0), 0);
-            const fiberConsumed = state.logs.reduce((sum, l) => sum + (l.fiber || 0), 0);
-            
+            const consumed = state.logs.reduce((s, l) => s + l.calories, 0);
+            const pConsumed = state.logs.reduce((s, l) => s + (l.protein || 0), 0);
+            const fConsumed = state.logs.reduce((s, l) => s + (l.fiber || 0), 0);
             const remaining = state.dailyGoal - consumed;
             document.getElementById('sideBalance').textContent = remaining;
             document.getElementById('topBalance').textContent = remaining;
-            
             document.getElementById('statGoal').textContent = state.dailyGoal;
             document.getElementById('statConsumed').textContent = `${consumed} kcal`;
-            const progressPercent = (consumed / state.dailyGoal) * 100;
-            document.getElementById('progressFill').style.width = `${Math.min(progressPercent, 100)}%`;
-            document.getElementById('statPercent').textContent = `${progressPercent.toFixed(1)}%`;
+            document.getElementById('progressFill').style.width = `${Math.min((consumed/state.dailyGoal)*100, 100)}%`;
+            document.getElementById('statPercent').textContent = `${((consumed/state.dailyGoal)*100).toFixed(1)}%`;
             
-            const pGoal = state.proteinGoal || 150;
-            document.getElementById('proteinGoalText').textContent = `${pGoal}g`;
-            document.getElementById('proteinConsumed').textContent = `${proteinConsumed.toFixed(1)}g`;
-            const pPercent = (proteinConsumed / pGoal) * 100;
-            document.getElementById('proteinFill').style.width = `${Math.min(pPercent, 100)}%`;
-            document.getElementById('proteinPercent').textContent = `${pPercent.toFixed(1)}%`;
+            [['protein', pConsumed, state.proteinGoal || 150], ['fiber', fConsumed, state.fiberGoal || 30]].forEach(([key, cur, goal]) => {
+                document.getElementById(`${key}GoalText`).textContent = `${goal}g`;
+                document.getElementById(`${key}Consumed`).textContent = `${cur.toFixed(1)}g`;
+                document.getElementById(`${key}Fill`).style.width = `${Math.min((cur/goal)*100, 100)}%`;
+                document.getElementById(`${key}Percent`).textContent = `${((cur/goal)*100).toFixed(1)}%`;
+            });
 
-            const fGoal = state.fiberGoal || 30;
-            document.getElementById('fiberGoalText').textContent = `${fGoal}g`;
-            document.getElementById('fiberConsumed').textContent = `${fiberConsumed.toFixed(1)}g`;
-            const fPercent = (fiberConsumed / fGoal) * 100;
-            document.getElementById('fiberFill').style.width = `${Math.min(fPercent, 100)}%`;
-            document.getElementById('fiberPercent').textContent = `${fPercent.toFixed(1)}%`;
-
-            const isOverGoal = remaining < 0;
-            document.getElementById('topBalance').style.color = isOverGoal ? 'var(--accent-danger)' : 'var(--accent-primary)';
-            document.getElementById('progressFill').style.background = isOverGoal ? 'var(--accent-danger)' : 'var(--accent-primary)';
-
+            const isOver = remaining < 0;
+            document.getElementById('topBalance').style.color = isOver ? 'var(--accent-danger)' : 'var(--accent-primary)';
+            document.getElementById('progressFill').style.background = isOver ? 'var(--accent-danger)' : 'var(--accent-primary)';
             renderList('loggedList', state.logs);
-            updateLibraryDropdown();
         }
 
-        function renderList(containerId, items) {
-            const el = document.getElementById(containerId);
-            el.innerHTML = items.length ? '' : '<div style="color: var(--text-secondary); text-align: center; padding: 20px;">No entries yet</div>';
+        function renderList(cId, items) {
+            const el = document.getElementById(cId); el.innerHTML = items.length ? '' : '<div style="color: var(--text-secondary); text-align: center; padding: 20px;">No entries</div>';
             [...items].reverse().forEach(item => {
-                const div = document.createElement('div');
-                div.className = 'log-item';
-                div.innerHTML = `
-                    <div class="log-info">
-                        <span class="food-name">${item.name}</span>
-                        <span class="meal-cat">${item.meal} | P: ${item.protein || 0}g</span>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 12px;">
-                        <span class="calories">${item.calories} kcal</span>
-                        <button class="delete-btn" onclick="deleteLog(${item.id})">✕</button>
-                    </div>
-                `;
+                const div = document.createElement('div'); div.className = 'log-item';
+                div.innerHTML = `<div class="log-info"><span class="food-name">${item.name}</span><span class="meal-cat">${item.meal} | P: ${item.protein || 0}g</span></div>
+                <div style="display:flex; align-items:center; gap:12px;"><span class="calories">${item.calories} kcal</span><button class="delete-btn" onclick="deleteLog(${item.id})">✕</button></div>`;
                 el.appendChild(div);
             });
         }
 
         function renderHistory() {
-            const container = document.getElementById('historyContainer');
-            container.innerHTML = state.history.length ? '' : '<div style="color: var(--text-secondary); text-align: center; padding: 20px;">No history yet.</div>';
+            const el = document.getElementById('historyContainer'); el.innerHTML = state.history.length ? '' : '<div style="color: var(--text-secondary); text-align: center; padding: 20px;">No history</div>';
             [...state.history].reverse().forEach(h => {
-                const div = document.createElement('div');
-                div.className = 'card';
-                div.style.marginBottom = '16px';
-                const percent = (h.totalConsumed / h.goal) * 100;
-                const isOver = h.totalConsumed > h.goal;
-                div.innerHTML = `
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
-                        <div>
-                            <h3 style="font-size: 1.1rem; font-weight: 600;">${h.date}</h3>
-                            <span style="font-size: 0.75rem; color: var(--text-secondary);">${new Date(h.timestamp).toLocaleDateString()}</span>
-                        </div>
-                        <button class="delete-btn" onclick="deleteHistory(${h.id})">✕</button>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                        <span style="color: var(--text-secondary)">Consumed: ${h.totalConsumed} kcal | Protein: ${h.totalProtein || 0}g</span>
-                        <span style="font-weight: 700; color: ${isOver ? 'var(--accent-danger)' : 'var(--accent-primary)'}">${percent.toFixed(1)}%</span>
-                    </div>
-                    <div style="width: 100%; height: 6px; background: var(--bg-deep); border-radius: 3px; overflow: hidden;">
-                        <div style="height: 100%; width: ${Math.min(percent, 100)}%; background: ${isOver ? 'var(--accent-danger)' : 'var(--accent-primary)'}"></div>
-                    </div>
-                `;
-                container.appendChild(div);
+                const div = document.createElement('div'); div.className = 'card';
+                const pct = (h.totalConsumed / h.goal) * 100;
+                div.innerHTML = `<div style="display:flex; justify-content:space-between; margin-bottom:12px;"><div><h3 style="font-family:'Cinzel',serif; font-size:1.1rem; font-weight:700;">${h.date}</h3></div><button class="delete-btn" onclick="deleteHistory(${h.id})">✕</button></div>
+                <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:8px;"><span>${h.totalConsumed} kcal | P: ${h.totalProtein || 0}g | F: ${h.totalFiber || 0}g</span><span>${pct.toFixed(1)}%</span></div>
+                <div class="progress-container"><div class="progress-fill" style="background:${pct > 100 ? 'var(--accent-danger)' : 'var(--accent-primary)'}; width:${Math.min(pct, 100)}%;"></div></div>`;
+                el.appendChild(div);
             });
         }
 
         loadState();
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js')
-                    .then(reg => console.log('SW Registered'))
-                    .catch(err => console.log('SW Failed', err));
-            });
-        }
+        if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js').then(reg => console.log('SW Registered')).catch(err => console.log('SW Failed', err)); }); }
     </script>
 </body>
 </html>
